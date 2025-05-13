@@ -1,6 +1,8 @@
 import { Sidenav, Nav, Stack, IconButton, Sidebar } from "rsuite";
 import PeoplesTimeIcon from '@rsuite/icons/PeoplesTime';
-import TaskIcon from "@rsuite/icons/Task";
+import EventDetailIcon from '@rsuite/icons/EventDetail';
+import ListIcon from '@rsuite/icons/List';
+import HistoryIcon from '@rsuite/icons/History';
 import ArrowLeftLineIcon from "@rsuite/icons/ArrowLeftLine";
 import ArrowRightLineIcon from "@rsuite/icons/ArrowRightLine";
 import GridIcon from "@rsuite/icons/Grid";
@@ -52,10 +54,16 @@ export default function SideNav({ active }) {
         router.push(`/module/vehicle_booking/dashboard`);
         break;
       case "2":
-        router.push(`/module/vehicle_booking/vehicle`);
+        router.push(`/module/vehicle_booking/vehicles`);
         break;
       case "3":
-        router.push(`/user`);
+        router.push(`/module/vehicle_booking/bookings`);
+        break;
+      case "4":
+        router.push(`/module/vehicle_booking/approval`);
+        break;
+      case "5":
+        router.push(`/module/vehicle_booking/approval/log`);
         break;
 
       default:
@@ -87,11 +95,17 @@ export default function SideNav({ active }) {
               <Nav.Item eventKey="1" icon={<GridIcon />}>
                 Dashboard
               </Nav.Item>
-              <Nav.Item eventKey="2" icon={<PeoplesTimeIcon />}>
+              <Nav.Item eventKey="2" icon={<ListIcon />}>
                 Vehicles
               </Nav.Item>
-              <Nav.Item eventKey="3" icon={<TaskIcon />}>
-                Master User
+              <Nav.Item eventKey="3" icon={<EventDetailIcon />}>
+                Bookings
+              </Nav.Item>
+              <Nav.Item eventKey="4" icon={<PeoplesTimeIcon />}>
+                Approval
+              </Nav.Item>
+              <Nav.Item eventKey="5" icon={<HistoryIcon />}>
+                Approve Logs
               </Nav.Item>
             </Nav>
           </Sidenav.Body>

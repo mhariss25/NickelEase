@@ -1,41 +1,38 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import {
     Container,
-    Stack,
-    Breadcrumb,
-    Panel,
     Header,
     Content,
+    Breadcrumb,
+    Panel,
+    Stack,
 } from "rsuite";
-import { useRouter } from "next/router";
 import ApiVehicleBooking from '@/pages/api/vehicle_booking/api_vehicle_booking.js';
-import ChartComponent from "@/component/vehicle_booking/dashboard/ChartComponent";
+import TableComponent from "@/component/vehicle_booking/approval/log/TableComponent";
 import CustomNavbar from "@/component/navbar";
 import SideNav from "@/component/sidenav";
 
-export default function VehicleDashboard() {
+export default function VehicleBooking() {
 
-    const router = useRouter();
-    const [activeKey, setActiveKey] = useState("1");
+    const [bookingLogData, setBookingLogData] = useState([]);
 
-    const [vehiclesData, setVehiclesData] = useState([]);
+    const [activeKey, setActiveKey] = useState("5");
 
-    const HandleGetAllVehicles = async () => {
+    const HandleGetAllBookingLog = async () => {
         try {
-            const res = await ApiVehicleBooking().getAllVehicles();
+            const res = await ApiVehicleBooking().getAllBookingLog();
             if (res.status === 200) {
-                setVehiclesData(res.data);
-                processChartData(res.data); // Proses data untuk chart
+                setBookingLogData(res.data);
             } else {
-                console.log("Error on GetAllVehicles: ", res.message);
+                console.log("Error on GetAllVehicleBooking: ", res.message);
             }
         } catch (error) {
-            console.log("Error on catch GetAllVehicles: ", error.message);
+            console.log("Error on catch GetAllVehicleBooking: ", error.message);
         }
     };
 
     useEffect(() => {
-        HandleGetAllVehicles();
+        HandleGetAllBookingLog();
     }, []);
 
     return (
@@ -54,7 +51,7 @@ export default function VehicleDashboard() {
                     <Stack justifyContent="center" style={{ marginTop: '20px' }}>
                         <Breadcrumb>
                             <Breadcrumb.Item>Vehicle Booking</Breadcrumb.Item>
-                            <Breadcrumb.Item active>Dashboard</Breadcrumb.Item>
+                            <Breadcrumb.Item active>Approve Log</Breadcrumb.Item>
                         </Breadcrumb>
                     </Stack>
                     <Panel
@@ -68,14 +65,20 @@ export default function VehicleDashboard() {
                                 alignItems="flex-start"
                                 spacing={10}
                             >
-                                <h4>Vehicle Usage Chart</h4>
+                                <h4>Approve Log</h4>
                             </Stack>
                         }
                     >
-                        <ChartComponent dataV={vehiclesData} />
+                        <Panel
+                            bordered
+                            style={{ margin: 10, width: "950px" }}
+                            shaded
+                        >
+                            <TableComponent dataB={bookingLogData} getAll={HandleGetAllBookingLog} />
+                        </Panel>
                     </Panel>
                 </Content>
             </Container>
         </Container>
     );
-}
+};

@@ -19,8 +19,6 @@ export default function DashboardChartComponent({ dataV }) {
   });
   const [endDate, setEndDate] = useState(() => new Date());
 
-  if (!startDate || !endDate || endDate < startDate) return {};
-
   const start = new Date(startDate);
   start.setUTCHours(0, 0, 0, 0);
 
@@ -32,7 +30,7 @@ export default function DashboardChartComponent({ dataV }) {
     const yy = dt.getUTCFullYear();
     const mm = String(dt.getUTCMonth() + 1).padStart(2, "0");
     const dd = String(dt.getUTCDate()).padStart(2, "0");
-    return `${yy}-${mm}-${dd}`;
+    return `${dd}-${mm}-${yy}`;
   };
 
   // Proses chart data
@@ -85,20 +83,24 @@ export default function DashboardChartComponent({ dataV }) {
       shaded
     >
       <div style={{ display: "flex", gap: 12 }}>
-        {/* Datepicker untuk tanggal mulai */}
-        <DatePicker
-          placeholder="Start Date"
-          value={startDate}
-          onChange={setStartDate}
-          format="yyyy-MM-dd"
-        />
-        {/* Datepicker untuk tanggal akhir */}
-        <DatePicker
-          placeholder="End Date"
-          value={endDate}
-          onChange={setEndDate}
-          format="yyyy-MM-dd"
-        />
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <label style={{ marginBottom: 4 }}>Start Date</label>
+          <DatePicker
+            placeholder="Start Date"
+            value={startDate}
+            onChange={setStartDate}
+            format="dd-MM-yyyy"
+          />
+        </div>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <label style={{ marginBottom: 4 }}>End Date</label>
+          <DatePicker
+            placeholder="End Date"
+            value={endDate}
+            onChange={setEndDate}
+            format="dd-MM-yyyy"
+          />
+        </div>
       </div>
       {startDate && endDate && endDate < startDate && (
         <div style={{ color: "red", marginTop: 8 }}>

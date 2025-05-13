@@ -18,6 +18,10 @@ export default function ApiVehicleBooking() {
         getAllBookingLog: createApiFunction("get", "vehicle-booking/get-bookinglog"),
         createVehicle: createApiFunction("post", "vehicle-booking/post-vehicle"),
         createBooking: createApiFunction("post", "vehicle-booking/post-booking"),
+        updateVehicle: createApiFunction("put", "vehicle-booking/put-vehicle"),
         updateBooking: createApiFunction("put", "vehicle-booking/put-booking"),
+        updateApproveBooking: createApiFunction("put", "vehicle-booking/put-approve-booking"),
+        updateStatusVehicle: createApiFunction("put", "vehicle-booking/put-status-vehicle"),
+        updateStatusBooking: createApiFunction("put", "vehicle-booking/put-status-booking"),
     };
 }

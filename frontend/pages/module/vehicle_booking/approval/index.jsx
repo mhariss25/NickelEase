@@ -8,31 +8,31 @@ import {
     Stack,
 } from "rsuite";
 import ApiVehicleBooking from '@/pages/api/vehicle_booking/api_vehicle_booking.js';
-import TableComponent from "@/component/dashboard/TableComponent";
+import TableComponent from "@/component/vehicle_booking/approval/TableComponent";
 import CustomNavbar from "@/component/navbar";
 import SideNav from "@/component/sidenav";
 
 export default function VehicleBooking() {
 
-    const [vehiclesData, setVehiclesData] = useState([]);
+    const [vehicleBookingsData, setVehicleBookingsData] = useState([]);
 
-    const [activeKey, setActiveKey] = useState("2");
+    const [activeKey, setActiveKey] = useState("4");
 
-    const HandleGetAllVehicles = async () => {
+    const HandleGetAllVehicleBooking = async () => {
         try {
-            const res = await ApiVehicleBooking().getAllVehicles();
+            const res = await ApiVehicleBooking().getAllVehicleBooking();
             if (res.status === 200) {
-                setVehiclesData(res.data);
+                setVehicleBookingsData(res.data);
             } else {
-                console.log("Error on GetAllVehicles: ", res.message);
+                console.log("Error on GetAllVehicleBooking: ", res.message);
             }
         } catch (error) {
-            console.log("Error on catch GetAllVehicles: ", error.message);
+            console.log("Error on catch GetAllVehicleBooking: ", error.message);
         }
     };
 
     useEffect(() => {
-        HandleGetAllVehicles();
+        HandleGetAllVehicleBooking();
     }, []);
 
     return (
@@ -51,7 +51,7 @@ export default function VehicleBooking() {
                     <Stack justifyContent="center" style={{ marginTop: '20px' }}>
                         <Breadcrumb>
                             <Breadcrumb.Item>Vehicle Booking</Breadcrumb.Item>
-                            <Breadcrumb.Item active>Vehicle</Breadcrumb.Item>
+                            <Breadcrumb.Item active>Approval</Breadcrumb.Item>
                         </Breadcrumb>
                     </Stack>
                     <Panel
@@ -65,7 +65,7 @@ export default function VehicleBooking() {
                                 alignItems="flex-start"
                                 spacing={10}
                             >
-                                <h4>Vehicles</h4>
+                                <h4>Bookings Approval</h4>
                             </Stack>
                         }
                     >
@@ -74,7 +74,7 @@ export default function VehicleBooking() {
                             style={{ margin: 10, width: "950px" }}
                             shaded
                         >
-                            <TableComponent dataB={vehiclesData} getAll={HandleGetAllVehicles} />
+                            <TableComponent dataB={vehicleBookingsData} getAll={HandleGetAllVehicleBooking} />
                         </Panel>
                     </Panel>
                 </Content>

@@ -22,7 +22,7 @@ import PlusRoundIcon from "@rsuite/icons/PlusRound";
 import EditIcon from "@rsuite/icons/Edit";
 import ApiVehicleBooking from "@/pages/api/vehicle_booking/api_vehicle_booking";
 
-export default function DashboardTableComponent({ dataB, getAll }) {
+export default function DashboardTableComponent({ dataV, getAll }) {
 
   const { HeaderCell, Cell, Column } = Table;
   const [searchKeyword, setSearchKeyword] = useState("");
@@ -48,6 +48,7 @@ export default function DashboardTableComponent({ dataB, getAll }) {
     registration_number: null,
     fuel_consumption: null,
     service_schedule: null,
+    vehicle_id: null,
   };
 
   const [showAddModal, setShowAddModal] = useState(false);
@@ -74,7 +75,7 @@ export default function DashboardTableComponent({ dataB, getAll }) {
     }, 500);
   };
 
-  const filteredData = dataB.filter((rowData) => {
+  const filteredData = dataV.filter((rowData) => {
     const searchFields = ["vehicles_id", "vehicles_type", "brand"];
     const matchesSearch = searchFields.some((field) =>
       rowData[field]?.toString().toLowerCase().includes(searchKeyword.toLowerCase())
@@ -109,7 +110,7 @@ export default function DashboardTableComponent({ dataB, getAll }) {
     return filteredData;
   };
 
-  const totalRowCount = searchKeyword ? filteredData.length : dataB.length;
+  const totalRowCount = searchKeyword ? filteredData.length : dataV.length;
 
   const HandleAddVehicle = async () => {
     const errors = {};
@@ -165,29 +166,6 @@ export default function DashboardTableComponent({ dataB, getAll }) {
 
   const HandleEditVehicle = async () => {
     const errors = {};
-    if (!editVehicleForm.vehicle_type) {
-      errors.vehicle_type = "Vehicle Type is Mandatory!";
-    }
-
-    if (!editVehicleForm.brand) {
-      errors.brand = "Brand is Mandatory!";
-    }
-
-    if (!editVehicleForm.fuel_consumption) {
-      errors.fuel_consumption = "Fuel Consumption is Mandatory!";
-    }
-
-    if (!editVehicleForm.model) {
-      errors.model = "Model is Mandatory!";
-    }
-
-    if (!editVehicleForm.registration_number) {
-      errors.registration_number = "Registration Number is Mandatory!";
-    }
-
-    if (!editVehicleForm.service_schedule) {
-      errors.service_schedule = "Service Schedule is Mandatory!";
-    }
 
     if (Object.keys(errors).length > 0) {
       setErrorsAddForm(errors);
@@ -195,30 +173,32 @@ export default function DashboardTableComponent({ dataB, getAll }) {
     }
 
     try {
-      const res = await ApiStep().editStep({
+      const res = await ApiVehicleBooking().updateVehicle({
         ...editVehicleForm,
+        fuel_consumption: parseFloat(editVehicleForm.fuel_consumption),
       });
 
-      if (res.status === 201) {
-        HandleGetAllStepApi();
+      if (res.status === 200) {
         setShowEditModal(false);
+        setEditVehicleForm(emptyEditVehicleForm);
+        getAll();
       } else {
-        console.log("Error on EditStepApi: ", res.message);
+        console.log("Error on EditVehicle: ", res.message);
       }
     } catch (error) {
-      console.log("Error on EditStepApi: ", error.message);
+      console.log("Error on EditVehicle: ", error.message);
     }
   };
 
-  const handleEditStatusStepApi = async (id_step, is_active) => {
+  const HandleEditStatusVehicle = async (vehicle_id, is_active) => {
     try {
-      const res = await ApiStep().editStatusStep({
-        id_step,
+      const res = await ApiVehicleBooking().updateStatusVehicle({
+        vehicle_id,
         is_active,
       });
 
       if (res.status === 200) {
-        HandleGetAllStepApi();
+        getAll();
       } else {
         console.log("Error on update status: ", res.message);
       }
@@ -242,7 +222,7 @@ export default function DashboardTableComponent({ dataB, getAll }) {
                   setShowAddModal(true);
                 }}
               >
-                Tambah
+                Add
               </IconButton>
             </div>
             <InputGroup inside>
@@ -313,22 +293,28 @@ export default function DashboardTableComponent({ dataB, getAll }) {
             <HeaderCell>Action</HeaderCell>
             <Cell style={{ padding: "8px" }}>
               {(rowData) => (
-                <div>
+                <div style={{ display: "flex", gap: 4 }}>
                   <Button
-                    appearance="subtle"
+                    appearance="ghost"
                     disabled={rowData.is_active === 0}
                     onClick={() => {
                       setShowEditModal(true);
                       setEditVehicleForm({
                         ...editVehicleForm,
-                        step_name: rowData.step_name,
-                        id_step: rowData.id_step,
+                        vehicle_type: rowData.vehicle_type,
+                        brand: rowData.brand,
+                        model: rowData.model,
+                        registration_number: rowData.registration_number,
+                        fuel_consumption: rowData.fuel_consumption,
+                        service_schedule: rowData.service_schedule,
+                        created_at: rowData.created_at,
+                        vehicle_id: rowData.vehicle_id,
                       });
                     }}
                   >
                     <EditIcon />
                   </Button>
-                  <Button appearance="subtle" onClick={() => handleEditStatusStepApi(rowData.id_step, rowData.is_active)}>
+                  <Button appearance="ghost" onClick={() => HandleEditStatusVehicle(rowData.vehicle_id, rowData.is_active)}>
                     {rowData.is_active === 1 ? <TrashIcon style={{ fontSize: "16px" }} /> : <ReloadIcon style={{ fontSize: "16px" }} />}
                   </Button>
                 </div>
@@ -401,7 +387,7 @@ export default function DashboardTableComponent({ dataB, getAll }) {
               <Form.ControlLabel>Brand</Form.ControlLabel>
               <Form.Control
                 name="brand"
-                value={editVehicleForm.brand}
+                value={addVehicleForm.brand}
                 onChange={(value) => {
                   setAddVehicleForm((prevFormValue) => ({
                     ...prevFormValue,
@@ -421,7 +407,7 @@ export default function DashboardTableComponent({ dataB, getAll }) {
               <Form.ControlLabel>Model</Form.ControlLabel>
               <Form.Control
                 name="Model"
-                value={editVehicleForm.model}
+                value={addVehicleForm.model}
                 onChange={(value) => {
                   setAddVehicleForm((prevFormValue) => ({
                     ...prevFormValue,
@@ -441,7 +427,7 @@ export default function DashboardTableComponent({ dataB, getAll }) {
               <Form.ControlLabel>Registration Number</Form.ControlLabel>
               <Form.Control
                 name="registration_number"
-                value={editVehicleForm.registration_number}
+                value={addVehicleForm.registration_number}
                 onChange={(value) => {
                   setAddVehicleForm((prevFormValue) => ({
                     ...prevFormValue,
@@ -486,14 +472,12 @@ export default function DashboardTableComponent({ dataB, getAll }) {
               <Form.ControlLabel>Service Schedule</Form.ControlLabel>
               <DatePicker
                 name="service_schedule"
-                value={addVehicleForm.service_schedule ? new Date(addVehicleForm.service_schedule) : null}  // Ensure it's a valid Date object
+                value={addVehicleForm.service_schedule ? new Date(addVehicleForm.service_schedule) : null}
                 onChange={(value) => {
-                  // If value is null, reset it to null, otherwise ensure the date is properly formatted
-                  const formattedDate = value ? value.toISOString().split('T')[0] : null;  // 'YYYY-MM-DD'
-
+                  const formattedDate = value ? value.toISOString().split('T')[0] : null;
                   setAddVehicleForm((prevFormValue) => ({
                     ...prevFormValue,
-                    service_schedule: formattedDate, // Store the formatted date
+                    service_schedule: formattedDate,
                   }));
                   setErrorsAddForm((prevErrors) => ({
                     ...prevErrors,
@@ -517,7 +501,7 @@ export default function DashboardTableComponent({ dataB, getAll }) {
             }}
             appearance="subtle"
           >
-            Batal
+            Cancel
           </Button>
           <Button
             onClick={() => {
@@ -525,10 +509,10 @@ export default function DashboardTableComponent({ dataB, getAll }) {
             }}
             appearance="primary"
             type="submit"
-            loading={loading} // Menampilkan loading state pada tombol
-            disabled={loading} // Menonaktifkan tombol saat loading
+            loading={loading}
+            disabled={loading}
           >
-            Tambah
+            Add
           </Button>
           {loading && <Loader backdrop size="md" vertical content="Adding Data..." active={loading} />}
         </Modal.Footer>
@@ -544,27 +528,143 @@ export default function DashboardTableComponent({ dataB, getAll }) {
         overflow={false}
       >
         <Modal.Header>
-          <Modal.Title>Ubah Step</Modal.Title>
+          <Modal.Title>Edit Vehicle</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form fluid>
             <Form.Group>
-              <Form.ControlLabel>Nama Step</Form.ControlLabel>
-              <Form.Control
-                name="step_name"
-                value={editVehicleForm.step_name}
+              <Form.ControlLabel>Vehicle Type</Form.ControlLabel>
+              <SelectPicker
+                name="vehicle_type"
+                value={editVehicleForm.vehicle_type}
                 onChange={(value) => {
                   setEditVehicleForm((prevFormValue) => ({
                     ...prevFormValue,
-                    step_name: value,
+                    vehicle_type: value,
                   }));
                   setErrorsEditForm((prevErrors) => ({
                     ...prevErrors,
-                    step_name: undefined,
+                    vehicle_type: undefined,
+                  }));
+                }}
+                data={[
+                  { label: "Passenger", value: "passenger" },
+                  { label: "Cargo", value: "cargo" },
+                ]}
+                placeholder="Select Vehicle Type"
+                style={{ width: "100%" }}
+              />
+              {errorsEditForm.vehicle_type && <p style={{ color: "red" }}>{errorsEditForm.vehicle_type}</p>}
+            </Form.Group>
+          </Form>
+          <Form fluid>
+            <Form.Group>
+              <Form.ControlLabel>Brand</Form.ControlLabel>
+              <Form.Control
+                name="brand"
+                value={editVehicleForm.brand}
+                onChange={(value) => {
+                  setEditVehicleForm((prevFormValue) => ({
+                    ...prevFormValue,
+                    brand: value,
+                  }));
+                  setErrorsEditForm((prevErrors) => ({
+                    ...prevErrors,
+                    brand: undefined,
                   }));
                 }}
               />
-              {errorsEditForm.step_name && <p style={{ color: "red" }}>{errorsEditForm.step_name}</p>}
+              {errorsEditForm.brand && <p style={{ color: "red" }}>{errorsEditForm.brand}</p>}
+            </Form.Group>
+          </Form>
+          <Form fluid>
+            <Form.Group>
+              <Form.ControlLabel>Model</Form.ControlLabel>
+              <Form.Control
+                name="Model"
+                value={editVehicleForm.model}
+                onChange={(value) => {
+                  setEditVehicleForm((prevFormValue) => ({
+                    ...prevFormValue,
+                    model: value,
+                  }));
+                  setErrorsEditForm((prevErrors) => ({
+                    ...prevErrors,
+                    model: undefined,
+                  }));
+                }}
+              />
+              {errorsEditForm.model && <p style={{ color: "red" }}>{errorsEditForm.model}</p>}
+            </Form.Group>
+          </Form>
+          <Form fluid>
+            <Form.Group>
+              <Form.ControlLabel>Registration Number</Form.ControlLabel>
+              <Form.Control
+                name="registration_number"
+                value={editVehicleForm.registration_number}
+                onChange={(value) => {
+                  setEditVehicleForm((prevFormValue) => ({
+                    ...prevFormValue,
+                    registration_number: value,
+                  }));
+                  setErrorsEditForm((prevErrors) => ({
+                    ...prevErrors,
+                    registration_number: undefined,
+                  }));
+                }}
+              />
+              {errorsEditForm.registration_number && <p style={{ color: "red" }}>{errorsEditForm.registration_number}</p>}
+            </Form.Group>
+          </Form>
+          <Form fluid>
+            <Form.Group>
+              <Form.ControlLabel>Fuel Consumption</Form.ControlLabel>
+              <InputNumber
+                name="fuel_consumption"
+                value={editVehicleForm.fuel_consumption}
+                onChange={(value) => {
+                  setEditVehicleForm((prevFormValue) => ({
+                    ...prevFormValue,
+                    fuel_consumption: value,
+                  }));
+                  setErrorsEditForm((prevErrors) => ({
+                    ...prevErrors,
+                    fuel_consumption: undefined,
+                  }));
+                }}
+                min={0}
+                step={0.1}
+                style={{ width: "100%" }}
+              />
+              {errorsEditForm.fuel_consumption && (
+                <p style={{ color: "red" }}>{errorsEditForm.fuel_consumption}</p>
+              )}
+            </Form.Group>
+          </Form>
+          <Form fluid>
+            <Form.Group>
+              <Form.ControlLabel>Service Schedule</Form.ControlLabel>
+              <DatePicker
+                name="service_schedule"
+                value={editVehicleForm.service_schedule ? new Date(editVehicleForm.service_schedule) : null}  // Ensure it's a valid Date object
+                onChange={(value) => {
+                  // If value is null, reset it to null, otherwise ensure the date is properly formatted
+                  const formattedDate = value ? value.toISOString().split('T')[0] : null;
+                  setEditVehicleForm((prevFormValue) => ({
+                    ...prevFormValue,
+                    service_schedule: formattedDate,
+                  }));
+                  setErrorsEditForm((prevErrors) => ({
+                    ...prevErrors,
+                    service_schedule: undefined,
+                  }));
+                }}
+                style={{ width: "100%" }}
+              />
+              {errorsEditForm.service_schedule && (
+                <p style={{ color: "red" }}>{errorsEditForm.service_schedule}</p>
+              )}
             </Form.Group>
           </Form>
         </Modal.Body>
@@ -577,16 +677,16 @@ export default function DashboardTableComponent({ dataB, getAll }) {
             }}
             appearance="subtle"
           >
-            Batal
+            Cancel
           </Button>
           <Button
             onClick={() => {
-              HandleEditStepApi();
+              HandleEditVehicle();
             }}
             appearance="primary"
             type="submit"
           >
-            Simpan
+            Save
           </Button>
           {loading && <Loader backdrop size="md" vertical content="Editing Data..." active={loading} />}
         </Modal.Footer>

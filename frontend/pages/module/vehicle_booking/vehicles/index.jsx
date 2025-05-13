@@ -1,31 +1,28 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import {
     Container,
-    Stack,
-    Breadcrumb,
-    Panel,
     Header,
     Content,
+    Breadcrumb,
+    Panel,
+    Stack,
 } from "rsuite";
-import { useRouter } from "next/router";
 import ApiVehicleBooking from '@/pages/api/vehicle_booking/api_vehicle_booking.js';
-import ChartComponent from "@/component/vehicle_booking/dashboard/ChartComponent";
+import TableComponent from "@/component/vehicle_booking/dashboard/TableComponent";
 import CustomNavbar from "@/component/navbar";
 import SideNav from "@/component/sidenav";
 
-export default function VehicleDashboard() {
-
-    const router = useRouter();
-    const [activeKey, setActiveKey] = useState("1");
+export default function VehicleData() {
 
     const [vehiclesData, setVehiclesData] = useState([]);
+
+    const [activeKey, setActiveKey] = useState("2");
 
     const HandleGetAllVehicles = async () => {
         try {
             const res = await ApiVehicleBooking().getAllVehicles();
             if (res.status === 200) {
                 setVehiclesData(res.data);
-                processChartData(res.data); // Proses data untuk chart
             } else {
                 console.log("Error on GetAllVehicles: ", res.message);
             }
@@ -54,7 +51,7 @@ export default function VehicleDashboard() {
                     <Stack justifyContent="center" style={{ marginTop: '20px' }}>
                         <Breadcrumb>
                             <Breadcrumb.Item>Vehicle Booking</Breadcrumb.Item>
-                            <Breadcrumb.Item active>Dashboard</Breadcrumb.Item>
+                            <Breadcrumb.Item active>Vehicles </Breadcrumb.Item>
                         </Breadcrumb>
                     </Stack>
                     <Panel
@@ -68,14 +65,20 @@ export default function VehicleDashboard() {
                                 alignItems="flex-start"
                                 spacing={10}
                             >
-                                <h4>Vehicle Usage Chart</h4>
+                                <h4>Vehicles Data</h4>
                             </Stack>
                         }
                     >
-                        <ChartComponent dataV={vehiclesData} />
+                        <Panel
+                            bordered
+                            style={{ margin: 10, width: "950px" }}
+                            shaded
+                        >
+                            <TableComponent dataV={vehiclesData} getAll={HandleGetAllVehicles} />
+                        </Panel>
                     </Panel>
                 </Content>
             </Container>
         </Container>
     );
-}
+};
