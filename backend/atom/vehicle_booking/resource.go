@@ -45,6 +45,18 @@ func GetAllBookingLogUsecase() ([]BookingLogs, bool, error) {
 	return list, true, nil
 }
 
+func GetBookingExcelUsecase() ([]BookingExcel, bool, error) {
+	list, ok, err := GetBookingExcelDB()
+	if !ok {
+		return list, ok, err
+	}
+	if len(list) == 0 {
+		log.Println("[vehicle_booking][resource][GetBookingExcelUsecase] booking kosong")
+		return list, true, errors.New("daftar booking kosong")
+	}
+	return list, true, nil
+}
+
 func CreateBookingUsecase(inputData VehicleBooking) (bool, error) {
 	if inputData.VehicleID == 0 || inputData.UserID == 0 {
 		return false, errors.New("vehicle_id & user_id tidak boleh kosong")

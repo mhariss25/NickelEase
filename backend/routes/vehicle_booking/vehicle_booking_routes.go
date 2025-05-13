@@ -13,6 +13,7 @@ func VehicleBookingRoutes(route *gin.Engine) {
 	vehicleBooking.GET("/get-vehicles", vehicle_booking.GetAllVehicles)
 	vehicleBooking.GET("/get-booking", vehicle_booking.GetAllVehicleBooking)
 	vehicleBooking.GET("/get-bookinglog", vehicle_booking.GetAllBookingLog)
+	vehicleBooking.GET("/get-bookingexcel", vehicle_booking.GetBookingExcel)
 	vehicleBooking.POST("/post-vehicle", vehicle_booking.CreateVehicle)
 	vehicleBooking.POST("/post-booking", vehicle_booking.CreateBooking)
 	vehicleBooking.PUT("/put-vehicle", vehicle_booking.UpdateVehicle)

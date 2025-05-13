@@ -163,6 +163,75 @@ func GetAllBookingLogDB() ([]BookingLogs, bool, error) {
 	return datas, true, nil
 }
 
+// GetAllVehicleBookingDB mengambil seluruh data kendaraan.
+func GetBookingExcelDB() ([]BookingExcel, bool, error) {
+	db := database.InitDB()
+	defer db.Close()
+
+	query := `
+		SELECT
+    		vb.booking_id,
+    		u.username AS username,
+            v.vehicle_type,
+            v.brand,
+            v.model,
+            v.registration_number,
+            vb.start_date,
+            vb.end_date,
+            vb.purpose,
+            vb.status AS status,
+            approver.username AS approver_name
+        FROM
+            vehicle_bookings vb
+        JOIN
+            users u ON vb.user_id = u.user_id
+        JOIN
+            vehicles v ON vb.vehicle_id = v.vehicle_id
+        LEFT JOIN
+            users approver ON vb.approver_id = approver.user_id
+        LEFT JOIN
+            booking_logs bl ON vb.booking_id = bl.booking_id
+        WHERE
+            vb.is_active = 1
+        GROUP BY
+            vb.booking_id
+        ORDER BY
+            vb.booking_id ASC;
+	`
+
+	var datas []BookingExcel
+	rows, err := db.Query(query)
+	if err != nil {
+		log.Println("[vehicle_booking][resource_db][GetAllBookingLogsDB] error on query", err.Error())
+		return datas, false, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var data BookingExcel
+		err := rows.Scan(
+			&data.BookingID,
+			&data.Username,
+			&data.VehicleType,
+			&data.Brand,
+			&data.Model,
+			&data.RegistrationNumber,
+			&data.StartDate,
+			&data.EndDate,
+			&data.Purpose,
+			&data.Status,
+			&data.ApproverName,
+		)
+		if err != nil {
+			log.Println("[vehicle_booking][resource_db][GetAllBookingLogsDB] error on scan", err.Error())
+			return datas, false, err
+		}
+		datas = append(datas, data)
+	}
+
+	return datas, true, nil
+}
+
 // CreateVehicleDB menyimpan master kendaraan baru.
 func CreateVehicleDB(inputData Vehicle) (bool, error) {
 	db := database.InitDB()

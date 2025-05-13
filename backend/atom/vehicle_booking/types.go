@@ -46,3 +46,18 @@ type BookingLogs struct {
 	ActionBy   int       `json:"action_by"`
 	ActionDate time.Time `json:"action_date"`
 }
+
+// BookingLogs model
+type BookingExcel struct {
+	BookingID          int       `json:"booking_id"`
+	Username           string    `json:"username"`
+	VehicleType        string    `json:"vehicle_type"`
+	Brand              string    `json:"brand"`
+	Model              string    `json:"model"`
+	RegistrationNumber string    `json:"registration_number"`
+	StartDate          time.Time `json:"start_date"`
+	EndDate            time.Time `json:"end_date"`
+	Purpose            string    `json:"purpose"`
+	Status             string    `json:"status"`
+	ApproverName       string    `json:"approver_name"`
+}
