@@ -16,6 +16,7 @@ export default function ApiVehicleBooking() {
         getAllVehicles: createApiFunction("get", "vehicle-booking/get-vehicles"),
         getAllVehicleBooking: createApiFunction("get", "vehicle-booking/get-booking"),
         getAllBookingLog: createApiFunction("get", "vehicle-booking/get-bookinglog"),
+        getBookingExcel: createApiFunction("get", "vehicle-booking/get-bookingexcel"),
         createVehicle: createApiFunction("post", "vehicle-booking/post-vehicle"),
         createBooking: createApiFunction("post", "vehicle-booking/post-booking"),
         updateVehicle: createApiFunction("put", "vehicle-booking/put-vehicle"),

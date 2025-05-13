@@ -51,7 +51,8 @@ export default function VehicleBooking() {
                     <Stack justifyContent="center" style={{ marginTop: '20px' }}>
                         <Breadcrumb>
                             <Breadcrumb.Item>Vehicle Booking</Breadcrumb.Item>
-                            <Breadcrumb.Item active>Approve Log</Breadcrumb.Item>
+                            <Breadcrumb.Item>Approval</Breadcrumb.Item>
+                            <Breadcrumb.Item active>Log</Breadcrumb.Item>
                         </Breadcrumb>
                     </Stack>
                     <Panel

@@ -8,7 +8,7 @@ import {
     Stack,
 } from "rsuite";
 import ApiVehicleBooking from '@/pages/api/vehicle_booking/api_vehicle_booking.js';
-import TableComponent from "@/component/vehicle_booking/dashboard/TableComponent";
+import TableComponent from "@/component/vehicle_booking/vehicles/TableComponent";
 import CustomNavbar from "@/component/navbar";
 import SideNav from "@/component/sidenav";
 

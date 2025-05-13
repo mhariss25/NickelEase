@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useState } from "react";
 import {
   Panel,
   Table,
@@ -6,20 +6,11 @@ import {
   InputGroup,
   Input,
   Stack,
-  Button,
-  Modal,
-  Form,
-  SelectPicker,
-  Loader,
-  InputNumber,
-  DatePicker,
 } from "rsuite";
-import CheckOutlineIcon from '@rsuite/icons/CheckOutline';
 import CloseOutlineIcon from "@rsuite/icons/CloseOutline";
 import SearchIcon from "@rsuite/icons/Search";
-import ApiVehicleBooking from "@/pages/api/vehicle_booking/api_vehicle_booking";
 
-export default function DashboardTableComponent({ dataB, getAll }) {
+export default function DashboardTableComponent({ dataB }) {
 
   const { HeaderCell, Cell, Column } = Table;
   const [searchKeyword, setSearchKeyword] = useState("");
