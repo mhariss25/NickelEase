@@ -21,6 +21,7 @@ type Vehicle struct {
 	FuelConsumption    float64 `json:"fuel_consumption"`
 	ServiceSchedule    string  `json:"service_schedule"`
 	CreatedAt          string  `json:"created_at"`
+	IsActive           int     `json:"is_active"`
 }
 
 // VehicleBooking model
@@ -34,6 +35,7 @@ type VehicleBooking struct {
 	Status     string    `json:"status"`
 	ApproverID int       `json:"approver_id"`
 	CreatedAt  time.Time `json:"created_at"`
+	IsActive   int       `json:"is_active"`
 }
 
 // BookingLogs model

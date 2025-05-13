@@ -59,16 +59,47 @@ func CreateVehicleUsecase(inputData Vehicle) (bool, error) {
 	return CreateVehicleDB(inputData)
 }
 
-func UpdateBookingUsecase(inputData VehicleBooking) (bool, error) {
-	if inputData.BookingID == 0 || inputData.Status == "" {
-		return false, errors.New("id & status wajib diisi")
-	}
-	return UpdateBookingDB(inputData)
-}
-
 func UpdateVehicleUsecase(inputData Vehicle) (bool, error) {
 	if inputData.VehicleID == 0 || inputData.RegistrationNumber == "" {
 		return false, errors.New("id kendaraan wajib diisi")
 	}
 	return UpdateVehicleDB(inputData)
+}
+
+func UpdateBookingUsecase(inputData VehicleBooking) (bool, error) {
+	if inputData.BookingID == 0 {
+		return false, errors.New("id wajib diisi")
+	}
+	return UpdateApproveBookingDB(inputData)
+}
+
+func UpdateApproveBookingUsecase(inputData VehicleBooking) (bool, error) {
+	if inputData.BookingID == 0 || inputData.Status == "" {
+		return false, errors.New("id & status wajib diisi")
+	}
+	return UpdateApproveBookingDB(inputData)
+}
+
+func UpdateStatusVehicleUsecase(inputData Vehicle) (bool, error) {
+	status, err := UpdateStatusVehicleDB(inputData)
+	if !status {
+		return status, err
+	}
+
+	if err != nil {
+		return false, err
+	}
+	return status, nil
+}
+
+func UpdateStatusBookingUsecase(inputData VehicleBooking) (bool, error) {
+	status, err := UpdateStatusBookingDB(inputData)
+	if !status {
+		return status, err
+	}
+
+	if err != nil {
+		return false, err
+	}
+	return status, nil
 }

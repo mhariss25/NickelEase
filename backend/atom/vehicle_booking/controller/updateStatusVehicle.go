@@ -8,8 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func UpdateBooking(ctx *gin.Context) {
-	var req vehicle_booking.VehicleBooking
+func UpdateStatusVehicle(ctx *gin.Context) {
+	var req vehicle_booking.Vehicle
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"status":  400,
@@ -19,7 +19,7 @@ func UpdateBooking(ctx *gin.Context) {
 		return
 	}
 
-	ok, err := vehicle_booking.UpdateBookingDB(req)
+	ok, err := vehicle_booking.UpdateStatusVehicleUsecase(req)
 	if !ok {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"status":  400,
@@ -40,6 +40,6 @@ func UpdateBooking(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"status":  200,
 		"data":    req,
-		"message": "Status booking ter-update",
+		"message": "Status vehicle ter-update",
 	})
 }

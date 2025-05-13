@@ -24,7 +24,8 @@ func GetAllVehiclesDB() ([]Vehicle, bool, error) {
 			registration_number,
 			fuel_consumption,
 			service_schedule,
-			created_at
+			created_at,
+			is_active
 		FROM 
 			vehicles
 		ORDER BY
@@ -50,6 +51,7 @@ func GetAllVehiclesDB() ([]Vehicle, bool, error) {
 			&data.FuelConsumption,
 			&data.ServiceSchedule,
 			&data.CreatedAt,
+			&data.IsActive,
 		)
 		if err != nil {
 			log.Println("[vehicle_booking][resource_db][GetAllVehiclesDB] error on scan", err.Error())
@@ -76,7 +78,8 @@ func GetAllVehicleBookingDB() ([]VehicleBooking, bool, error) {
 			purpose,
 			status,
 			approver_id,
-			created_at
+			created_at,
+			is_active
 		FROM 
 			vehicle_bookings
 		ORDER BY
@@ -103,6 +106,7 @@ func GetAllVehicleBookingDB() ([]VehicleBooking, bool, error) {
 			&data.Status,
 			&data.ApproverID,
 			&data.CreatedAt,
+			&data.IsActive,
 		)
 		if err != nil {
 			log.Println("[vehicle_booking][resource_db][GetAllVehiclesBookingDB] error on scan", err.Error())
@@ -289,6 +293,43 @@ func UpdateBookingDB(inputData VehicleBooking) (bool, error) {
 	defer db.Close()
 
 	query := `
+		UPDATE vehicle_bookings
+		SET
+			vehicle_id = ?,
+			user_id = ?, 
+			start_date = ?, 
+			end_date = ?, 
+			purpose = ?, 
+			status = ?, 
+			approver_id = ?
+		WHERE
+			booking_id = ?
+	`
+
+	_, err := db.Exec(
+		query,
+		inputData.VehicleID,
+		inputData.UserID,
+		inputData.StartDate,
+		inputData.EndDate,
+		inputData.Purpose,
+		inputData.Status,
+		inputData.ApproverID,
+		inputData.BookingID,
+	)
+	if err != nil {
+		log.Println("[vehicle_booking][resource_db][UpdateBookingDB] error on exec ", err.Error())
+		return false, err
+	}
+
+	return true, nil
+}
+
+func UpdateApproveBookingDB(inputData VehicleBooking) (bool, error) {
+	db := database.InitDB()
+	defer db.Close()
+
+	query := `
 		UPDATE 
 			vehicle_bookings 
 		SET 
@@ -331,6 +372,74 @@ func UpdateBookingDB(inputData VehicleBooking) (bool, error) {
 	)
 	if err != nil {
 		log.Println("[vehicle_booking][resource_db][UpdateBookingDB] error on log insert", err.Error())
+		return false, err
+	}
+
+	return true, nil
+}
+
+func UpdateStatusVehicleDB(inputData Vehicle) (bool, error) {
+	db := database.InitDB()
+	defer db.Close()
+
+	query := `
+	UPDATE vehicles
+	SET 
+		is_active = 0
+	WHERE 
+		vehicle_id = ?;	
+	`
+
+	if inputData.IsActive == 0 {
+		query = `
+		UPDATE vehicles
+		SET 
+			is_active = 1
+		WHERE 
+			vehicle_id = ?;	
+		`
+	}
+
+	_, err := db.Exec(
+		query,
+		inputData.VehicleID,
+	)
+	if err != nil {
+		log.Println("[vehicle_booking][resource_db][UpdateStatusVehicleDB] error on exec ", err.Error())
+		return false, err
+	}
+
+	return true, nil
+}
+
+func UpdateStatusBookingDB(inputData VehicleBooking) (bool, error) {
+	db := database.InitDB()
+	defer db.Close()
+
+	query := `
+	UPDATE vehicle_bookings
+	SET 
+		is_active = 0
+	WHERE 
+		booking_id = ?;	
+	`
+
+	if inputData.IsActive == 0 {
+		query = `
+		UPDATE vehicle_bookings
+		SET 
+			is_active = 1
+		WHERE 
+			booking_id = ?;	
+		`
+	}
+
+	_, err := db.Exec(
+		query,
+		inputData.BookingID,
+	)
+	if err != nil {
+		log.Println("[vehicle_booking][resource_db][UpdateStatusVehicleDB] error on exec ", err.Error())
 		return false, err
 	}
 
