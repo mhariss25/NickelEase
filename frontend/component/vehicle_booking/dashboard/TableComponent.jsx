@@ -89,7 +89,6 @@ export default function DashboardTableComponent({ dataE }) {
       <Panel
         bordered
         bodyFill
-        shaded
         style={{ margin: 10, width: "950px" }}
         header={
           <Stack justifyContent="space-between">

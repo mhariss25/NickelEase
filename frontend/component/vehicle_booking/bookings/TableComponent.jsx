@@ -13,6 +13,7 @@ import {
   Loader,
   InputNumber,
   DatePicker,
+  SelectPicker
 } from "rsuite";
 import { Trash as TrashIcon, Reload as ReloadIcon } from "@rsuite/icons";
 import CloseOutlineIcon from "@rsuite/icons/CloseOutline";
@@ -21,7 +22,7 @@ import PlusRoundIcon from "@rsuite/icons/PlusRound";
 import EditIcon from "@rsuite/icons/Edit";
 import ApiVehicleBooking from "@/pages/api/vehicle_booking/api_vehicle_booking";
 
-export default function DashboardTableComponent({ dataB, getAll }) {
+export default function DashboardTableComponent({ dataB, dataV, dataU, getAll }) {
 
   const { HeaderCell, Cell, Column } = Table;
   const [searchKeyword, setSearchKeyword] = useState("");
@@ -230,6 +231,7 @@ export default function DashboardTableComponent({ dataB, getAll }) {
       <Panel
         bordered
         bodyFill
+        style={{ margin: 10 }}
         header={
           <Stack justifyContent="space-between">
             <div className="flex gap-2">
@@ -280,16 +282,16 @@ export default function DashboardTableComponent({ dataB, getAll }) {
             <Cell dataKey="booking_id" />
           </Column>
           <Column width={120} align="center" sortable fullText resizable>
-            <HeaderCell align="center">Vehicle ID</HeaderCell>
-            <Cell dataKey="vehicle_id" />
+            <HeaderCell align="center">Registration Number</HeaderCell>
+            <Cell dataKey="registration_number" />
           </Column>
           <Column width={120} align="center" sortable fullText resizable>
-            <HeaderCell align="center">User ID</HeaderCell>
-            <Cell dataKey="user_id" />
+            <HeaderCell align="center">Username</HeaderCell>
+            <Cell dataKey="username" />
           </Column>
           <Column width={120} align="center" sortable fullText resizable>
-            <HeaderCell align="center">Approver ID</HeaderCell>
-            <Cell dataKey="approver_id" />
+            <HeaderCell align="center">Approver Name</HeaderCell>
+            <Cell dataKey="approver_name" />
           </Column>
           <Column width={210} sortable fullText resizable>
             <HeaderCell align="center">Purpose</HeaderCell>
@@ -380,22 +382,24 @@ export default function DashboardTableComponent({ dataB, getAll }) {
         <Modal.Body>
           <Form fluid>
             <Form.Group>
-              <Form.ControlLabel>Vehicle ID</Form.ControlLabel>
-              <InputNumber
+              <Form.ControlLabel>Registration Number</Form.ControlLabel>
+              <SelectPicker
                 name="vehicle_id"
+                data={dataV.map((vehicle) => ({
+                  label: vehicle.registration_number,
+                  value: vehicle.vehicle_id,
+                }))}
                 value={addVehicleForm.vehicle_id}
                 onChange={(value) => {
                   setAddVehicleForm((prevFormValue) => ({
                     ...prevFormValue,
-                    vehicle_id: parseInt(value, 10),
+                    vehicle_id: value,
                   }));
                   setErrorsAddForm((prevErrors) => ({
                     ...prevErrors,
                     vehicle_id: undefined,
                   }));
                 }}
-                min={0}
-                step={1}
                 style={{ width: "100%" }}
               />
               {errorsAddForm.vehicle_id && <p style={{ color: "red" }}>{errorsAddForm.vehicle_id}</p>}
@@ -403,22 +407,24 @@ export default function DashboardTableComponent({ dataB, getAll }) {
           </Form>
           <Form fluid>
             <Form.Group>
-              <Form.ControlLabel>User ID</Form.ControlLabel>
-              <InputNumber
+              <Form.ControlLabel>Username</Form.ControlLabel>
+              <SelectPicker
                 name="user_id"
+                data={dataU.map((user) => ({
+                  label: user.username,
+                  value: user.user_id,
+                }))}
                 value={addVehicleForm.user_id}
                 onChange={(value) => {
                   setAddVehicleForm((prevFormValue) => ({
                     ...prevFormValue,
-                    user_id: parseInt(value, 10),
+                    user_id: value,
                   }));
                   setErrorsAddForm((prevErrors) => ({
                     ...prevErrors,
                     user_id: undefined,
                   }));
                 }}
-                min={0}
-                step={1}
                 style={{ width: "100%" }}
               />
               {errorsAddForm.user_id && <p style={{ color: "red" }}>{errorsAddForm.user_id}</p>}
@@ -426,22 +432,27 @@ export default function DashboardTableComponent({ dataB, getAll }) {
           </Form>
           <Form fluid>
             <Form.Group>
-              <Form.ControlLabel>Approver ID</Form.ControlLabel>
-              <InputNumber
+              <Form.ControlLabel>Approver Name</Form.ControlLabel>
+              <SelectPicker
                 name="approver_id"
+                data={dataU
+                  .filter((user) => user.role === "approver")
+                  .map((user) => ({
+                    label: user.username,
+                    value: user.user_id,
+                  }))
+                }
                 value={addVehicleForm.approver_id}
                 onChange={(value) => {
                   setAddVehicleForm((prevFormValue) => ({
                     ...prevFormValue,
-                    approver_id: parseInt(value, 10),
+                    approver_id: value,
                   }));
                   setErrorsAddForm((prevErrors) => ({
                     ...prevErrors,
                     approver_id: undefined,
                   }));
                 }}
-                min={0}
-                step={1}
                 style={{ width: "100%" }}
               />
               {errorsAddForm.approver_id && <p style={{ color: "red" }}>{errorsAddForm.approver_id}</p>}
@@ -578,22 +589,24 @@ export default function DashboardTableComponent({ dataB, getAll }) {
         <Modal.Body>
           <Form fluid>
             <Form.Group>
-              <Form.ControlLabel>Vehicle ID</Form.ControlLabel>
-              <InputNumber
+              <Form.ControlLabel>Registration Number</Form.ControlLabel>
+              <SelectPicker
                 name="vehicle_id"
+                data={dataV.map((vehicle) => ({
+                  label: vehicle.registration_number,
+                  value: vehicle.vehicle_id,
+                }))}
                 value={editVehicleForm.vehicle_id}
                 onChange={(value) => {
                   setEditVehicleForm((prevFormValue) => ({
                     ...prevFormValue,
-                    vehicle_id: parseInt(value, 10),
+                    vehicle_id: value,
                   }));
-                  setErrorsEditForm((prevErrors) => ({
+                  setEditVehicleForm((prevErrors) => ({
                     ...prevErrors,
                     vehicle_id: undefined,
                   }));
                 }}
-                min={0}
-                step={1}
                 style={{ width: "100%" }}
               />
               {errorsEditForm.vehicle_id && <p style={{ color: "red" }}>{errorsEditForm.vehicle_id}</p>}
@@ -601,22 +614,24 @@ export default function DashboardTableComponent({ dataB, getAll }) {
           </Form>
           <Form fluid>
             <Form.Group>
-              <Form.ControlLabel>User ID</Form.ControlLabel>
-              <InputNumber
+              <Form.ControlLabel>Username</Form.ControlLabel>
+              <SelectPicker
                 name="user_id"
+                data={dataU.map((user) => ({
+                  label: user.username,
+                  value: user.user_id,
+                }))}
                 value={editVehicleForm.user_id}
                 onChange={(value) => {
                   setEditVehicleForm((prevFormValue) => ({
                     ...prevFormValue,
-                    user_id: parseInt(value, 10),
+                    user_id: value,
                   }));
                   setErrorsEditForm((prevErrors) => ({
                     ...prevErrors,
                     user_id: undefined,
                   }));
                 }}
-                min={0}
-                step={1}
                 style={{ width: "100%" }}
               />
               {errorsEditForm.user_id && <p style={{ color: "red" }}>{errorsEditForm.user_id}</p>}
@@ -624,22 +639,27 @@ export default function DashboardTableComponent({ dataB, getAll }) {
           </Form>
           <Form fluid>
             <Form.Group>
-              <Form.ControlLabel>Approver ID</Form.ControlLabel>
-              <InputNumber
+              <Form.ControlLabel>Approver Name</Form.ControlLabel>
+              <SelectPicker
                 name="approver_id"
+                data={dataU
+                  .filter((user) => user.role === "approver")
+                  .map((user) => ({
+                    label: user.username,
+                    value: user.user_id,
+                  }))
+                }
                 value={editVehicleForm.approver_id}
                 onChange={(value) => {
                   setEditVehicleForm((prevFormValue) => ({
                     ...prevFormValue,
-                    approver_id: parseInt(value, 10),
+                    approver_id: value,
                   }));
                   setErrorsEditForm((prevErrors) => ({
                     ...prevErrors,
                     approver_id: undefined,
                   }));
                 }}
-                min={0}
-                step={1}
                 style={{ width: "100%" }}
               />
               {errorsEditForm.approver_id && <p style={{ color: "red" }}>{errorsEditForm.approver_id}</p>}

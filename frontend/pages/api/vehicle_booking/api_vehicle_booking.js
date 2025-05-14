@@ -13,6 +13,7 @@ const createApiFunction = (method, url) => async (data) => {
 
 export default function ApiVehicleBooking() {
     return {
+        getAllUser: createApiFunction("get", "vehicle-booking/get-user"),
         getAllVehicles: createApiFunction("get", "vehicle-booking/get-vehicles"),
         getAllVehicleBooking: createApiFunction("get", "vehicle-booking/get-booking"),
         getAllBookingLog: createApiFunction("get", "vehicle-booking/get-bookinglog"),

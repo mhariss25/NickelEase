@@ -121,6 +121,7 @@ export default function DashboardTableComponent({ dataB, getAll }) {
       <Panel
         bordered
         bodyFill
+        style={{ margin: 10 }}
         header={
           <Stack justifyContent="space-between">
             <InputGroup inside>
@@ -160,16 +161,16 @@ export default function DashboardTableComponent({ dataB, getAll }) {
             <Cell dataKey="booking_id" />
           </Column>
           <Column width={120} align="center" sortable fullText resizable>
-            <HeaderCell align="center">Vehicle ID</HeaderCell>
-            <Cell dataKey="vehicle_id" />
+            <HeaderCell align="center">Registration Number</HeaderCell>
+            <Cell dataKey="registration_number" />
           </Column>
           <Column width={120} align="center" sortable fullText resizable>
-            <HeaderCell align="center">User ID</HeaderCell>
-            <Cell dataKey="user_id" />
+            <HeaderCell align="center">Username</HeaderCell>
+            <Cell dataKey="username" />
           </Column>
           <Column width={120} align="center" sortable fullText resizable>
-            <HeaderCell align="center">Approver ID</HeaderCell>
-            <Cell dataKey="approver_id" />
+            <HeaderCell align="center">Approver Name</HeaderCell>
+            <Cell dataKey="approver_name" />
           </Column>
           <Column width={210} sortable fullText resizable>
             <HeaderCell align="center">Purpose</HeaderCell>

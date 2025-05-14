@@ -1,4 +1,4 @@
-import NoticeIcon from "@rsuite/icons/Notice";
+import AdminIcon from '@rsuite/icons/Admin';
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
@@ -41,14 +41,6 @@ export default function CustomNavbar({ onSelect, activeKey, ...props }) {
     }
   };
 
-  const displayName = () => {
-    const username = sessionStorage.getItem("username");
-    if (username) {
-      return username.length > 10 ? `${username.substring(0, 10)}...` : username;
-    }
-    return "User";
-  };
-
 
   useEffect(() => {
     const userData = handleUserData();
@@ -88,15 +80,15 @@ export default function CustomNavbar({ onSelect, activeKey, ...props }) {
           style={{ marginRight: 10 }}>
           {theme ? <MoonO /> : <SunO />}
         </Button>
-        <Nav.Menu title={displayName()}>
-          <Nav.Item
-            eventKey="1"
-            onClick={() => {
-              handleLogout();
-            }}>
-            Sign Out
-          </Nav.Item>
-        </Nav.Menu>
+       <Nav.Menu title={<AdminIcon />}>
+      <Nav.Item
+        eventKey="1"
+        onClick={() => {
+          handleLogout();
+        }}>
+        Sign Out
+      </Nav.Item>
+    </Nav.Menu>
       </Nav>
     </Navbar>
   );

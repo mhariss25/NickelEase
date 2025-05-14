@@ -58,6 +58,7 @@ export default function VehicleData() {
                         bordered
                         bodyFill
                         shaded
+                        style={{ margin: 10 }}
                         header={
                             <Stack
                                 justifyContent="flex-start"
@@ -69,16 +70,10 @@ export default function VehicleData() {
                             </Stack>
                         }
                     >
-                        <Panel
-                            bordered
-                            style={{ margin: 10, width: "950px" }}
-                            shaded
-                        >
-                            <TableComponent dataV={vehiclesData} getAll={HandleGetAllVehicles} />
-                        </Panel>
+                        <TableComponent dataV={vehiclesData} getAll={HandleGetAllVehicles} />
                     </Panel>
                 </Content>
             </Container>
-        </Container>
+        </Container >
     );
 };

@@ -76,6 +76,7 @@ export default function VehicleDashboard() {
                         bordered
                         bodyFill
                         shaded
+                        style={{ margin: 10 }}
                         header={
                             <Stack
                                 justifyContent="flex-start"
@@ -88,22 +89,6 @@ export default function VehicleDashboard() {
                         }
                     >
                         <TableComponent dataE={bookingExcelData} />
-                    </Panel>
-                    <Panel
-                        bordered
-                        bodyFill
-                        shaded
-                        header={
-                            <Stack
-                                justifyContent="flex-start"
-                                direction="column"
-                                alignItems="flex-start"
-                                spacing={10}
-                            >
-                                <h4>Vehicle Usage Chart</h4>
-                            </Stack>
-                        }
-                    >
                         <ChartComponent dataV={vehiclesData} />
                     </Panel>
                 </Content>

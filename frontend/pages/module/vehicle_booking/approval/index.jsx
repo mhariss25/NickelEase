@@ -8,13 +8,15 @@ import {
     Stack,
 } from "rsuite";
 import ApiVehicleBooking from '@/pages/api/vehicle_booking/api_vehicle_booking.js';
-import TableComponent from "@/component/vehicle_booking/approval/TableComponent";
+import TableComponentApproval from "@/component/vehicle_booking/approval/TableComponent";
+import TableComponentLog from "@/component/vehicle_booking/approval/log/TableComponent";
 import CustomNavbar from "@/component/navbar";
 import SideNav from "@/component/sidenav";
 
 export default function VehicleBooking() {
 
     const [vehicleBookingsData, setVehicleBookingsData] = useState([]);
+    const [bookingLogData, setBookingLogData] = useState([]);
 
     const [activeKey, setActiveKey] = useState("4");
 
@@ -31,8 +33,22 @@ export default function VehicleBooking() {
         }
     };
 
+    const HandleGetAllBookingLog = async () => {
+        try {
+            const res = await ApiVehicleBooking().getAllBookingLog();
+            if (res.status === 200) {
+                setBookingLogData(res.data);
+            } else {
+                console.log("Error on GetAllVehicleBooking: ", res.message);
+            }
+        } catch (error) {
+            console.log("Error on catch GetAllVehicleBooking: ", error.message);
+        }
+    };
+
     useEffect(() => {
         HandleGetAllVehicleBooking();
+        HandleGetAllBookingLog();
     }, []);
 
     return (
@@ -58,6 +74,7 @@ export default function VehicleBooking() {
                         bordered
                         bodyFill
                         shaded
+                        style={{ margin: 10 }}
                         header={
                             <Stack
                                 justifyContent="flex-start"
@@ -69,13 +86,8 @@ export default function VehicleBooking() {
                             </Stack>
                         }
                     >
-                        <Panel
-                            bordered
-                            style={{ margin: 10, width: "950px" }}
-                            shaded
-                        >
-                            <TableComponent dataB={vehicleBookingsData} getAll={HandleGetAllVehicleBooking} />
-                        </Panel>
+                        <TableComponentApproval dataB={vehicleBookingsData} getAll={HandleGetAllVehicleBooking} />
+                        <TableComponentLog dataL={bookingLogData} getAll={HandleGetAllBookingLog} />
                     </Panel>
                 </Content>
             </Container>

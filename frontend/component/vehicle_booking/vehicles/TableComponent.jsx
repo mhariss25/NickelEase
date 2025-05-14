@@ -212,6 +212,7 @@ export default function DashboardTableComponent({ dataV, getAll }) {
       <Panel
         bordered
         bodyFill
+        style={{ margin: 10 }}
         header={
           <Stack justifyContent="space-between">
             <div className="flex gap-2">

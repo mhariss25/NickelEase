@@ -15,6 +15,8 @@ import SideNav from "@/component/sidenav";
 export default function VehicleBooking() {
 
     const [vehicleBookingsData, setVehicleBookingsData] = useState([]);
+    const [vehiclesData, setVehiclesData] = useState([]);
+    const [userData, setUserData] = useState([]);
 
     const [activeKey, setActiveKey] = useState("3");
 
@@ -31,8 +33,36 @@ export default function VehicleBooking() {
         }
     };
 
+    const HandleGetAllVehicles = async () => {
+        try {
+            const res = await ApiVehicleBooking().getAllVehicles();
+            if (res.status === 200) {
+                setVehiclesData(res.data);
+            } else {
+                console.log("Error on GetAllVehicles: ", res.message);
+            }
+        } catch (error) {
+            console.log("Error on catch GetAllVehicles: ", error.message);
+        }
+    };
+
+    const HandleGetAllUser = async () => {
+        try {
+            const res = await ApiVehicleBooking().getAllUser();
+            if (res.status === 200) {
+                setUserData(res.data);
+            } else {
+                console.log("Error on GetAllUsers: ", res.message);
+            }
+        } catch (error) {
+            console.log("Error on catch GetAllUsers: ", error.message);
+        }
+    };
+
     useEffect(() => {
-        HandleGetAllVehicleBooking();
+        HandleGetAllVehicleBooking()
+        HandleGetAllVehicles()
+        HandleGetAllUser()
     }, []);
 
     return (
@@ -58,6 +88,7 @@ export default function VehicleBooking() {
                         bordered
                         bodyFill
                         shaded
+                        style={{ margin: 10 }}
                         header={
                             <Stack
                                 justifyContent="flex-start"
@@ -69,13 +100,7 @@ export default function VehicleBooking() {
                             </Stack>
                         }
                     >
-                        <Panel
-                            bordered
-                            style={{ margin: 10, width: "950px" }}
-                            shaded
-                        >
-                            <TableComponent dataB={vehicleBookingsData} getAll={HandleGetAllVehicleBooking} />
-                        </Panel>
+                        <TableComponent dataB={vehicleBookingsData} dataV={vehiclesData} dataU={userData} getAll={HandleGetAllVehicleBooking} />
                     </Panel>
                 </Content>
             </Container>

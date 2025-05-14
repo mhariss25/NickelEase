@@ -10,7 +10,7 @@ import {
 import CloseOutlineIcon from "@rsuite/icons/CloseOutline";
 import SearchIcon from "@rsuite/icons/Search";
 
-export default function DashboardTableComponent({ dataB }) {
+export default function DashboardTableComponent({ dataL }) {
 
   const { HeaderCell, Cell, Column } = Table;
   const [searchKeyword, setSearchKeyword] = useState("");
@@ -36,7 +36,7 @@ export default function DashboardTableComponent({ dataB }) {
     }, 500);
   };
 
-  const filteredData = dataB.filter((rowData) => {
+  const filteredData = dataL.filter((rowData) => {
     const searchFields = ["booking_id", "vehicles_id", "user_id"];
     const matchesSearch = searchFields.some((field) =>
       rowData[field]?.toString().toLowerCase().includes(searchKeyword.toLowerCase())
@@ -71,13 +71,14 @@ export default function DashboardTableComponent({ dataB }) {
     return filteredData;
   };
 
-  const totalRowCount = searchKeyword ? filteredData.length : dataB.length;
+  const totalRowCount = searchKeyword ? filteredData.length : dataL.length;
 
   return (
     <div>
       <Panel
         bordered
         bodyFill
+        style={{ margin: 10 }}
         header={
           <Stack justifyContent="space-between">
             <InputGroup inside>
@@ -119,6 +120,18 @@ export default function DashboardTableComponent({ dataB }) {
           <Column width={120} align="center" sortable fullText resizable>
             <HeaderCell align="center">Booking ID</HeaderCell>
             <Cell dataKey="booking_id" />
+          </Column>
+          <Column width={120} align="center" sortable fullText resizable>
+            <HeaderCell align="center">Vehicle Type</HeaderCell>
+            <Cell dataKey="vehicle_type" />
+          </Column>
+          <Column width={120} align="center" sortable fullText resizable>
+            <HeaderCell align="center">Registration Number</HeaderCell>
+            <Cell dataKey="registration_number" />
+          </Column>
+          <Column width={120} align="center" sortable fullText resizable>
+            <HeaderCell align="center">Fuel Consumption</HeaderCell>
+            <Cell dataKey="fuel_consumption" />
           </Column>
           <Column width={120} sortable fullText resizable>
             <HeaderCell align="center">Status</HeaderCell>

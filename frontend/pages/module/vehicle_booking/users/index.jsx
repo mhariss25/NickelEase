@@ -7,32 +7,14 @@ import {
     Panel,
     Stack,
 } from "rsuite";
-import ApiVehicleBooking from '@/pages/api/vehicle_booking/api_vehicle_booking.js';
-import TableComponent from "@/component/vehicle_booking/approval/log/TableComponent";
 import CustomNavbar from "@/component/navbar";
 import SideNav from "@/component/sidenav";
 
-export default function VehicleBooking() {
-
-    const [bookingLogData, setBookingLogData] = useState([]);
+export default function Users() {
 
     const [activeKey, setActiveKey] = useState("5");
 
-    const HandleGetAllBookingLog = async () => {
-        try {
-            const res = await ApiVehicleBooking().getAllBookingLog();
-            if (res.status === 200) {
-                setBookingLogData(res.data);
-            } else {
-                console.log("Error on GetAllVehicleBooking: ", res.message);
-            }
-        } catch (error) {
-            console.log("Error on catch GetAllVehicleBooking: ", error.message);
-        }
-    };
-
     useEffect(() => {
-        HandleGetAllBookingLog();
     }, []);
 
     return (
@@ -51,8 +33,7 @@ export default function VehicleBooking() {
                     <Stack justifyContent="center" style={{ marginTop: '20px' }}>
                         <Breadcrumb>
                             <Breadcrumb.Item>Vehicle Booking</Breadcrumb.Item>
-                            <Breadcrumb.Item>Approval</Breadcrumb.Item>
-                            <Breadcrumb.Item active>Log</Breadcrumb.Item>
+                            <Breadcrumb.Item active>Users </Breadcrumb.Item>
                         </Breadcrumb>
                     </Stack>
                     <Panel
@@ -66,17 +47,10 @@ export default function VehicleBooking() {
                                 alignItems="flex-start"
                                 spacing={10}
                             >
-                                <h4>Approve Log</h4>
+                                <h4>Users</h4>
                             </Stack>
                         }
                     >
-                        <Panel
-                            bordered
-                            style={{ margin: 10, width: "950px" }}
-                            shaded
-                        >
-                            <TableComponent dataB={bookingLogData} getAll={HandleGetAllBookingLog} />
-                        </Panel>
                     </Panel>
                 </Content>
             </Container>

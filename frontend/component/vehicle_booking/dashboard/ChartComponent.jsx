@@ -14,7 +14,7 @@ export default function DashboardChartComponent({ dataV }) {
 
   const [startDate, setStartDate] = useState(() => {
     const d = new Date();
-    d.setDate(d.getDate() - 7);
+    d.setDate(d.getDate() - 14);
     return d;
   });
   const [endDate, setEndDate] = useState(() => new Date());
@@ -80,7 +80,6 @@ export default function DashboardChartComponent({ dataV }) {
     <Panel
       bordered
       style={{ margin: 10, width: "950px" }}
-      shaded
     >
       <div style={{ display: "flex", gap: 12 }}>
         <div style={{ display: "flex", flexDirection: "column" }}>
