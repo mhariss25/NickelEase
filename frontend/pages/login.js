@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Image from "next/image";
 import { useRouter } from 'next/router';
 import { Container, Content, Form, ButtonToolbar, Button, Panel, FlexboxGrid } from 'rsuite';
 import ApiAuth from '@/pages/api/auth/api_auth';
@@ -20,7 +21,7 @@ export default function LoginPage() {
       const data = { username: loginForm.username, password: loginForm.password };
       const res = await ApiAuth().Login(data);
       if (res && res.data && res.data.token) {
-        
+
         sessionStorage.setItem('token', res.data.token);
         sessionStorage.setItem('username', res.data.username);
         sessionStorage.setItem('role', res.data.role);
@@ -46,6 +47,15 @@ export default function LoginPage() {
         <Content style={{ marginTop: '25px' }}>
           <FlexboxGrid justify="center">
             <FlexboxGrid.Item colspan={12}>
+              <Image
+                src="/NickelEase.png"
+                alt="NickelEase_logo"
+                width={600}
+                height={120}
+                layout="fixed"
+                style={{ objectFit: "contain" }}
+                justify="center"
+              />
               <Panel header="Login" bordered>
                 <Form fluid>
                   <Form.Group>
@@ -60,7 +70,6 @@ export default function LoginPage() {
                   <Form.Group>
                     <ButtonToolbar>
                       <Button appearance="primary" loading={loading} onClick={handleLogin}>Sign in</Button>
-                      
                     </ButtonToolbar>
                   </Form.Group>
                 </Form>
