@@ -4,11 +4,9 @@ import "time"
 
 // User model
 type User struct {
-	UserID    int    `json:"user_id"`
-	Username  string `json:"username"`
-	Password  string `json:"password"`
-	Role      string `json:"role"`
-	CreatedAt string `json:"created_at"`
+	UserID   int    `json:"user_id"`
+	Username string `json:"username"`
+	Role     string `json:"role"`
 }
 
 // Vehicle model
@@ -25,25 +23,31 @@ type Vehicle struct {
 
 // VehicleBooking model
 type VehicleBooking struct {
-	BookingID  int       `json:"booking_id"`
-	VehicleID  int       `json:"vehicle_id"`
-	UserID     int       `json:"user_id"`
-	StartDate  time.Time `json:"start_date"`
-	EndDate    time.Time `json:"end_date"`
-	Purpose    string    `json:"purpose"`
-	Status     string    `json:"status"`
-	ApproverID int       `json:"approver_id"`
-	CreatedAt  time.Time `json:"created_at"`
-	IsActive   int       `json:"is_active"`
+	BookingID          int       `json:"booking_id"`
+	VehicleID          int       `json:"vehicle_id"`
+	UserID             int       `json:"user_id"`
+	StartDate          time.Time `json:"start_date"`
+	EndDate            time.Time `json:"end_date"`
+	Purpose            string    `json:"purpose"`
+	Status             string    `json:"status"`
+	ApproverID         int       `json:"approver_id"`
+	CreatedAt          time.Time `json:"created_at"`
+	IsActive           int       `json:"is_active"`
+	RegistrationNumber string    `json:"registration_number"`
+	Username           string    `json:"username"`
+	ApproverName       string    `json:"approver_name"`
 }
 
 // BookingLogs model
 type BookingLogs struct {
-	LogID      int       `json:"log_id"`
-	BookingID  int       `json:"booking_id"`
-	Status     string    `json:"status"`
-	ActionBy   int       `json:"action_by"`
-	ActionDate time.Time `json:"action_date"`
+	LogID              int       `json:"log_id"`
+	BookingID          int       `json:"booking_id"`
+	Status             string    `json:"status"`
+	ActionBy           int       `json:"action_by"`
+	ActionDate         time.Time `json:"action_date"`
+	VehicleType        string    `json:"vehicle_type"`
+	RegistrationNumber string    `json:"registration_number"`
+	FuelConsumption    float64   `json:"fuel_consumption"`
 }
 
 // BookingLogs model

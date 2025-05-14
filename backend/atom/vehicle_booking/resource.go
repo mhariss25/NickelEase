@@ -9,6 +9,18 @@ import (
 // Use-Case Layer – validasi & aturan domain ringan
 // ────────────────────────────────────────────────────────────────────────────────
 
+func GetAllUserUsecase() ([]User, bool, error) {
+	list, ok, err := GetAllUserDB()
+	if !ok {
+		return list, ok, err
+	}
+	if len(list) == 0 {
+		log.Println("[vehicle_booking][resource][GetAllUserUsecase] user kosong")
+		return list, true, errors.New("daftar user kosong")
+	}
+	return list, true, nil
+}
+
 func GetAllVehiclesUsecase() ([]Vehicle, bool, error) {
 	list, ok, err := GetAllVehiclesDB()
 	if !ok {

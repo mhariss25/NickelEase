@@ -10,6 +10,46 @@ import (
 // Data-Access Layer – CRUD ke tabel vehicle_bookings & vehicles
 // ────────────────────────────────────────────────────────────────────────────────
 
+func GetAllUserDB() ([]User, bool, error) {
+	db := database.InitDB()
+	defer db.Close()
+
+	query := `
+		SELECT 
+			user_id,
+			username,
+			role
+		FROM 
+			users
+		ORDER BY
+			user_id ASC;
+	`
+
+	var datas []User
+	rows, err := db.Query(query)
+	if err != nil {
+		log.Println("[vehicle_booking][resource_db][GetAllUserDB] error on query", err.Error())
+		return datas, false, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var data User
+		err := rows.Scan(
+			&data.UserID,
+			&data.Username,
+			&data.Role,
+		)
+		if err != nil {
+			log.Println("[vehicle_booking][resource_db][GetAllVehiclesDB] error on scan", err.Error())
+			return datas, false, err
+		}
+		datas = append(datas, data)
+	}
+
+	return datas, true, nil
+}
+
 // GetAllVehiclesDB mengambil seluruh data kendaraan.
 func GetAllVehiclesDB() ([]Vehicle, bool, error) {
 	db := database.InitDB()
@@ -61,33 +101,42 @@ func GetAllVehiclesDB() ([]Vehicle, bool, error) {
 	return datas, true, nil
 }
 
-// GetAllVehicleBookingDB mengambil seluruh data kendaraan.
+// GetAllVehicleBookingDB mengambil seluruh data kendaraan dengan username dan registration_number.
 func GetAllVehicleBookingDB() ([]VehicleBooking, bool, error) {
 	db := database.InitDB()
 	defer db.Close()
 
 	query := `
 		SELECT 
-			booking_id,
-			vehicle_id,
-			user_id,
-			start_date,
-			end_date,
-			purpose,
-			status,
-			approver_id,
-			created_at,
-			is_active
+			vb.booking_id,
+			vb.vehicle_id,
+			vb.user_id,
+			vb.start_date,
+			vb.end_date,
+			vb.purpose,
+			vb.status,
+			vb.approver_id,
+			vb.created_at,
+			vb.is_active,
+			u.username, 
+			v.registration_number,
+			approver.username AS approver_name
 		FROM 
-			vehicle_bookings
+			vehicle_bookings vb
+		JOIN 
+			users u ON vb.user_id = u.user_id 
+		JOIN 
+			vehicles v ON vb.vehicle_id = v.vehicle_id
+		 LEFT JOIN
+            users approver ON vb.approver_id = approver.user_id  
 		ORDER BY
-			booking_id ASC;
+			vb.booking_id ASC;
 	`
 
 	var datas []VehicleBooking
 	rows, err := db.Query(query)
 	if err != nil {
-		log.Println("[vehicle_booking][resource_db][GetAllVehiclesDB] error on query", err.Error())
+		log.Println("[vehicle_booking][resource_db][GetAllVehiclesBookingDB] error on query", err.Error())
 		return datas, false, err
 	}
 	defer rows.Close()
@@ -105,6 +154,9 @@ func GetAllVehicleBookingDB() ([]VehicleBooking, bool, error) {
 			&data.ApproverID,
 			&data.CreatedAt,
 			&data.IsActive,
+			&data.Username,
+			&data.RegistrationNumber,
+			&data.ApproverName,
 		)
 		if err != nil {
 			log.Println("[vehicle_booking][resource_db][GetAllVehiclesBookingDB] error on scan", err.Error())
@@ -116,22 +168,30 @@ func GetAllVehicleBookingDB() ([]VehicleBooking, bool, error) {
 	return datas, true, nil
 }
 
-// GetAllVehicleBookingDB mengambil seluruh data kendaraan.
+// GetAllBookingLogDB mengambil seluruh data log booking dengan vehicle_type, registration_number, dan fuel_consumption.
 func GetAllBookingLogDB() ([]BookingLogs, bool, error) {
 	db := database.InitDB()
 	defer db.Close()
 
+	// Update query to join vehicles table to get vehicle_type, registration_number, and fuel_consumption
 	query := `
 		SELECT 
-			log_id,
-			booking_id,
-			status,
-			action_by,
-			action_date
+			bklog.log_id,
+			bklog.booking_id,
+			bklog.status,
+			bklog.action_by,
+			bklog.action_date,
+			v.vehicle_type,  
+			v.registration_number,  
+			v.fuel_consumption 
 		FROM 
-			booking_logs
+			booking_logs bklog
+		JOIN 
+			vehicle_bookings vb ON bklog.booking_id = vb.booking_id  
+		JOIN 
+			vehicles v ON vb.vehicle_id = v.vehicle_id
 		ORDER BY
-			log_id ASC;
+			bklog.log_id ASC;
 	`
 
 	var datas []BookingLogs
@@ -150,6 +210,9 @@ func GetAllBookingLogDB() ([]BookingLogs, bool, error) {
 			&data.Status,
 			&data.ActionBy,
 			&data.ActionDate,
+			&data.VehicleType,
+			&data.RegistrationNumber,
+			&data.FuelConsumption,
 		)
 		if err != nil {
 			log.Println("[vehicle_booking][resource_db][GetAllBookingLogsDB] error on scan", err.Error())

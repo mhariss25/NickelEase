@@ -10,6 +10,7 @@ func VehicleBookingRoutes(route *gin.Engine) {
 	vehicleBooking := route.Group("/vehicle-booking")
 
 	// Rute untuk kendaraan dan pemesanan
+	vehicleBooking.GET("/get-user", vehicle_booking.GetAllUser)
 	vehicleBooking.GET("/get-vehicles", vehicle_booking.GetAllVehicles)
 	vehicleBooking.GET("/get-booking", vehicle_booking.GetAllVehicleBooking)
 	vehicleBooking.GET("/get-bookinglog", vehicle_booking.GetAllBookingLog)
