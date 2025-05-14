@@ -21,7 +21,6 @@ type Vehicle struct {
 	FuelConsumption    float64 `json:"fuel_consumption"`
 	ServiceSchedule    string  `json:"service_schedule"`
 	CreatedAt          string  `json:"created_at"`
-	IsActive           int     `json:"is_active"`
 }
 
 // VehicleBooking model

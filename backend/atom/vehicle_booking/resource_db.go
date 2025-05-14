@@ -24,8 +24,7 @@ func GetAllVehiclesDB() ([]Vehicle, bool, error) {
 			registration_number,
 			fuel_consumption,
 			service_schedule,
-			created_at,
-			is_active
+			created_at
 		FROM 
 			vehicles
 		ORDER BY
@@ -51,7 +50,6 @@ func GetAllVehiclesDB() ([]Vehicle, bool, error) {
 			&data.FuelConsumption,
 			&data.ServiceSchedule,
 			&data.CreatedAt,
-			&data.IsActive,
 		)
 		if err != nil {
 			log.Println("[vehicle_booking][resource_db][GetAllVehiclesDB] error on scan", err.Error())
@@ -458,16 +456,6 @@ func UpdateStatusVehicleDB(inputData Vehicle) (bool, error) {
 	WHERE 
 		vehicle_id = ?;	
 	`
-
-	if inputData.IsActive == 0 {
-		query = `
-		UPDATE vehicles
-		SET 
-			is_active = 1
-		WHERE 
-			vehicle_id = ?;	
-		`
-	}
 
 	_, err := db.Exec(
 		query,
