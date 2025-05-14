@@ -2,10 +2,14 @@
 
 NicklEase adalah sebuah aplikasi yang memiliki frontend menggunakan Next.js, backend menggunakan Go, dan database menggunakan MySQL. Aplikasi ini bertujuan untuk memberikan pengalaman yang efisien dan mudah digunakan dengan teknologi terbaru.
 
+## Versi yang Digunakan
+
+- **Go:** 1.23.2
+- **MySQL:** 8.0.30 
+
 ## Struktur Proyek
 
 Berikut adalah struktur folder utama dalam proyek ini:
-
 
 ## Deskripsi Bagian Proyek
 
@@ -34,7 +38,7 @@ Aplikasi frontend akan berjalan di `http://localhost:3000`.
 
 ### 2. Backend (Go)
 
-Backend aplikasi ini dibangun menggunakan bahasa pemrograman **Go**. Backend bertanggung jawab untuk menangani logika bisnis, API, dan interaksi dengan database.
+Backend aplikasi ini dibangun menggunakan bahasa pemrograman **Go** (versi 1.23.2). Backend bertanggung jawab untuk menangani logika bisnis, API, dan interaksi dengan database.
 
 #### Cara Menjalankan Backend:
 
@@ -57,7 +61,7 @@ Backend akan berjalan di `http://localhost:8000` (atau sesuai dengan pengaturan 
 
 ### 3. Database (MySQL)
 
-Database aplikasi menggunakan **MySQL** dan file `.sql` yang terdapat di dalam folder `database/` berisi skema dan data yang diperlukan untuk aplikasi berjalan.
+Database aplikasi menggunakan **MySQL 8.0.30** dan file `.sql` yang terdapat di dalam folder `database/` berisi skema dan data yang diperlukan untuk aplikasi berjalan.
 
 #### Cara Menggunakan Database:
 
@@ -83,6 +87,22 @@ Pastikan untuk mengonfigurasi beberapa variabel lingkungan untuk menyambungkan a
 - **Backend:**
   - Host dan port database MySQL.
   - URL dan konfigurasi lainnya sesuai kebutuhan aplikasi.
+
+## Login Pengguna
+
+Terdapat dua tipe pengguna dengan kredensial sebagai berikut:
+
+### 1. Approver:
+- **Username:** Approver1
+- **Password:** app123
+
+### 2. Admin:
+- **Username:** Admin1
+- **Password:** adm123
+- **Username:** Admin2
+- **Password:** adm123
+- **Username:** Admin3
+- **Password:** adm123
 
 ## Cara Berkontribusi
 
