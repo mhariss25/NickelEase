@@ -18,28 +18,43 @@ export default function CustomNavbar({ onSelect, activeKey, ...props }) {
       const parsedUserData = JSON.parse(userData);
       return parsedUserData;
     }
+    return null;
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("userData");
-    router.push("/");
-  };
+    try {
 
-  const displayName = () => {
-    if (sessionAuth?.user_name) {
-      if (sessionAuth.user_name.length > 10) {
-        return `${sessionAuth.user_name.substring(0, 10)}...`;
-      } else {
-        return sessionAuth.user_name;
-      }
-    } else {
-      return "User";
+
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("username");
+      sessionStorage.removeItem("role");
+
+
+
+
+
+
+
+      router.push("/login");
+    } catch (error) {
+      console.error("Error during logout:", error);
     }
   };
 
+  const displayName = () => {
+    const username = sessionStorage.getItem("username");
+    if (username) {
+      return username.length > 10 ? `${username.substring(0, 10)}...` : username;
+    }
+    return "User";
+  };
+
+
   useEffect(() => {
-    setSessionAuth(handleUserData());
+    const userData = handleUserData();
+    setSessionAuth(userData || {});
+
+
   }, []);
 
   return (
@@ -74,8 +89,11 @@ export default function CustomNavbar({ onSelect, activeKey, ...props }) {
           {theme ? <MoonO /> : <SunO />}
         </Button>
         <Nav.Menu title={displayName()}>
-          <Nav.Item disabled>{sessionAuth?.user_name}</Nav.Item>
-          <Nav.Item eventKey="1" onClick={handleLogout}>
+          <Nav.Item
+            eventKey="1"
+            onClick={() => {
+              handleLogout();
+            }}>
             Sign Out
           </Nav.Item>
         </Nav.Menu>

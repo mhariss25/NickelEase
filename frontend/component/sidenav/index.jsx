@@ -28,9 +28,13 @@ export default function SideNav({ active }) {
   const { isExpanded, toggleExpand } = useContext(sideNavContext);
   const [isAdmin, setIsAdmin] = useState(false);
 
-  // const [activeKey, setActiveKey] = useState("1");
+  const [userRole, setUserRole] = useState("");
+  const [activeKey, setActiveKey] = useState(active || "3");
 
   useEffect(() => {
+    const role = sessionStorage.getItem("role");
+    setUserRole(role);
+
     const userData = sessionStorage.getItem("userData");
     if (userData) {
       try {
@@ -38,13 +42,12 @@ export default function SideNav({ active }) {
         setIsAdmin(parsedUserData?.is_admin === 1);
       } catch (error) {
         console.error("Error parsing user data from sessionStorage:", error);
-        setIsAdmin(false); // Default to false if parsing fails
+        setIsAdmin(false);
       }
     } else {
-      setIsAdmin(false); // Default to false if no user data
+      setIsAdmin(false);
     }
   }, []);
-  const [activeKey, setActiveKey] = useState(active || "3");
 
   const handleRoutes = (eventKey) => {
     setActiveKey(eventKey);
@@ -92,21 +95,35 @@ export default function SideNav({ active }) {
           className="font-bold">
           <Sidenav.Body>
             <Nav className="mb-2" onSelect={handleRoutes} activeKey={activeKey}>
-              <Nav.Item eventKey="1" icon={<GridIcon />}>
-                Dashboard
-              </Nav.Item>
-              <Nav.Item eventKey="2" icon={<ListIcon />}>
-                Vehicles
-              </Nav.Item>
-              <Nav.Item eventKey="3" icon={<EventDetailIcon />}>
-                Bookings
-              </Nav.Item>
-              <Nav.Item eventKey="4" icon={<PeoplesTimeIcon />}>
-                Approval
-              </Nav.Item>
-              <Nav.Item eventKey="5" icon={<HistoryIcon />}>
-                Approve Logs
-              </Nav.Item>
+              {/* Admin and Approver Role */}
+              {(userRole === "admin" || userRole === "approver") && (
+                <>
+                  {/* Only Admin and Approver can see the first three items */}
+                  {userRole === "admin" && (
+                    <>
+                      <Nav.Item eventKey="1" icon={<GridIcon />}>Dashboard</Nav.Item>
+                      <Nav.Item eventKey="2" icon={<ListIcon />}>Vehicles</Nav.Item>
+                      <Nav.Item eventKey="3" icon={<EventDetailIcon />}>Bookings</Nav.Item>
+                    </>
+                  )}
+                  {/* Both Admin and Approver can see the Approval and Logs items */}
+                  {userRole === "approver" && (
+                    <>
+                      <Nav.Item eventKey="1" icon={<GridIcon />}>Dashboard</Nav.Item>
+                      <Nav.Item eventKey="2" icon={<ListIcon />}>Vehicles</Nav.Item>
+                      <Nav.Item eventKey="3" icon={<EventDetailIcon />}>Bookings</Nav.Item>
+                      <Nav.Item eventKey="4" icon={<PeoplesTimeIcon />}>Approval</Nav.Item>
+                      <Nav.Item eventKey="5" icon={<HistoryIcon />}>Approve Logs</Nav.Item>
+                    </>
+                  )}
+                </>
+              )}
+              {/* Non-admin/non-approver Role (e.g., regular user) */}
+              {userRole !== "admin" && userRole !== "approver" && (
+                <>
+                  <Nav.Item eventKey="3" icon={<EventDetailIcon />}>Bookings</Nav.Item>
+                </>
+              )}
             </Nav>
           </Sidenav.Body>
         </Sidenav>
@@ -114,3 +131,4 @@ export default function SideNav({ active }) {
     </Sidebar>
   );
 }
+
